@@ -1,0 +1,50 @@
+@import "tailwindcss";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/inter";
+
+@theme {
+  --font-display: "InterVariable", "Inter", system-ui, sans-serif;
+  --color-paper: #0A0A0B;       /* near-black backdrop */
+  --color-ink: #FFFFFF;         /* primary text on dark */
+  --color-ink2: #A1A1AA;        /* muted grey secondary text */
+  --color-stub: #16161A;        /* card / panel surface */
+  --color-line: #27272A;        /* hairline dividers / borders */
+  --color-brass: #FF5A36;       /* gradient warm-orange endpoint, used for solid accents */
+  --color-brassDark: #E5402A;   /* hover state for brass */
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+}
+
+/* The signature gradient text/accent: used sparingly, once per section,
+   so it stays a deliberate highlight rather than decoration. */
+.text-flame {
+  background-image: linear-gradient(90deg, #FF3D5A 0%, #FF7A30 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.bg-flame {
+  background-image: linear-gradient(90deg, #FF3D5A 0%, #FF7A30 100%);
+}
+
+.focus-ring {
+  outline: none;
+}
+.focus-ring:focus-visible {
+  box-shadow: 0 0 0 2px #FF5A36, 0 0 0 4px var(--color-paper);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
