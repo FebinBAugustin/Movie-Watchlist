@@ -1,5 +1,5 @@
 import { Sparkles, Search } from "lucide-react";
-
+import MovieCard from "../components/MovieCard";
 export default function Home() {
   return (
     <div>
@@ -49,14 +49,25 @@ export default function Home() {
         page reads as one cohesive design.
       */}
       <section className="mx-auto max-w-6xl px-5 py-12">
-        <div className="rounded-2xl border border-dashed border-line bg-stub/40 px-6 py-10 text-center">
-          <p className="text-sm font-semibold uppercase tracking-wide text-ink2">
-            Trending Now — genre filters + movie cards go here
-          </p>
-          <p className="mt-1 text-sm text-ink2/70">
-            (Member 2 — Movie Search &amp; Watchlist UI)
-          </p>
-        </div>
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+  <MovieCard
+    title="Interstellar"
+    year="2014"
+    poster="https://m.media-amazon.com/images/M/MV5BMjIxMjgxNzM4Nl5BMl5BanBnXkFtZTgwNzUxNjM3MjE@._V1_.jpg"
+  />
+
+  <MovieCard
+    title="Dune"
+    year="2021"
+    poster="https://m.media-amazon.com/images/M/MV5BN2EyZjM3NzQtYTAwYS00NjM2LTg5ZWEtZDRjZWY2NmE2ZGUwXkEyXkFqcGc@._V1_.jpg"
+  />
+
+  <MovieCard
+    title="Avengers: Endgame"
+    year="2019"
+    poster="https://m.media-amazon.com/images/M/MV5BMTc5MDY2NjM1MV5BMl5BanBnXkFtZTgwMzQ2MDIyNzM@._V1_.jpg"
+  />
+</div>
       </section>
     </div>
   );
