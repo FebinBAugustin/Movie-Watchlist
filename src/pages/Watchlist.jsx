@@ -6,12 +6,15 @@ import {
   updateMovieStatus,
   updateMovieRating,
 } from "../services/watchlistService";
+import { getMovieDetails } from "../services/movieService";
+import MovieDetailsModal from "../components/MovieDetailsModal";
 
 export default function Watchlist() {
   const [watchlist, setWatchlist] = useState([]);
   const [filter, setFilter] = useState("All");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
+  const [selectedMovie, setSelectedMovie] = useState(null);
 
   useEffect(() => {
     void loadWatchlist();
@@ -73,6 +76,20 @@ export default function Watchlist() {
     }
   };
 
+  const handleViewDetails = async (imdbID) => {
+    try {
+      const movie = await getMovieDetails(imdbID);
+
+      if (movie) {
+        setSelectedMovie(movie);
+      } else {
+        toast.error("Unable to load movie details.");
+      }
+    } catch (err) {
+      toast.error("Unable to load movie details.");
+    }
+  };
+
   const filteredMovies =
     filter === "All"
       ? watchlist
@@ -122,9 +139,7 @@ export default function Watchlist() {
       )}
 
       {isLoading ? (
-        <div className="mt-10 text-center text-gray-400">
-          Loading your watchlist...
-        </div>
+        <div className="mt-10 text-center text-gray-400">Loading your watchlist...</div>
       ) : filteredMovies.length === 0 ? (
         <div className="mt-10 rounded-xl border border-dashed border-gray-600 p-10 text-center">
           <h2 className="text-2xl font-bold text-white">No Movies Found</h2>
@@ -195,11 +210,25 @@ export default function Watchlist() {
                   >
                     🗑 Remove
                   </button>
+
+                  <button
+                    onClick={() => handleViewDetails(movie.imdbID)}
+                    className="mt-3 w-full rounded-lg bg-indigo-600 py-2 font-semibold text-white hover:bg-indigo-700"
+                  >
+                    🎥 View Details
+                  </button>
                 </div>
               </div>
             );
           })}
         </div>
+      )}
+
+      {selectedMovie && (
+        <MovieDetailsModal
+          movie={selectedMovie}
+          onClose={() => setSelectedMovie(null)}
+        />
       )}
     </div>
   );
