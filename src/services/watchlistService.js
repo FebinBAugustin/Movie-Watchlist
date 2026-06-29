@@ -1,74 +1,63 @@
-const STORAGE_KEY = "movie_watchlist";
+import axios from "axios";
+import { getAuthToken } from "./authService";
 
-// Get all movies
-export const getWatchlist = () => {
-  return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-};
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
-// Add movie
-export const addToWatchlist = (movie) => {
-  const watchlist = getWatchlist();
+const api = axios.create({
+  baseURL: API_URL,
+  headers: { "Content-Type": "application/json" },
+});
 
-  const exists = watchlist.find(
-    (item) => item.imdbID === movie.imdbID
-  );
+api.interceptors.request.use((config) => {
+  const token = getAuthToken();
 
-  if (!exists) {
-    watchlist.push({
-      ...movie,
-      status: "Plan to Watch",
-      rating: 0,
-    });
-
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(watchlist));
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
   }
+
+  return config;
+});
+
+const normalizeMovie = (movie) => ({
+  ...movie,
+  status: movie?.status || (movie?.watched ? "Watched" : "Plan to Watch"),
+  rating: typeof movie?.rating === "number" ? movie.rating : 0,
+  review: movie?.review || "",
+});
+
+export const getWatchlist = async () => {
+  const { data } = await api.get("/movies");
+  return (data || []).map(normalizeMovie);
 };
 
-// Remove movie
-export const removeFromWatchlist = (imdbID) => {
-  const updated = getWatchlist().filter(
-    (movie) => movie.imdbID !== imdbID
-  );
+export const addToWatchlist = async (movie) => {
+  const payload = {
+    title: movie?.title,
+    genre: movie?.genre || movie?.type || "Unknown",
+    rating: typeof movie?.rating === "number" ? movie.rating : 0,
+    watched: false,
+    status: "Plan to Watch",
+    review: "",
+    poster: movie?.poster || "N/A",
+    year: movie?.year || "",
+    imdbID: movie?.imdbID || "",
+  };
 
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+  const { data } = await api.post("/movies", payload);
+  return normalizeMovie(data);
 };
 
-// Update movie status
-export const updateMovieStatus = (imdbID) => {
-  const watchlist = getWatchlist();
-
-  const updated = watchlist.map((movie) => {
-    if (movie.imdbID === imdbID) {
-      let nextStatus = "Plan to Watch";
-
-      if (movie.status === "Plan to Watch") {
-        nextStatus = "Watching";
-      } else if (movie.status === "Watching") {
-        nextStatus = "Watched";
-      }
-
-      return {
-        ...movie,
-        status: nextStatus,
-      };
-    }
-
-    return movie;
-  });
-
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+export const removeFromWatchlist = async (movieId) => {
+  await api.delete(`/movies/${movieId}`);
+  return true;
 };
 
-// Update movie rating
-export const updateMovieRating = (imdbID, rating) => {
-  const updated = getWatchlist().map((movie) =>
-    movie.imdbID === imdbID
-      ? {
-          ...movie,
-          rating,
-        }
-      : movie
-  );
+export const updateMovieStatus = async (movieId, status) => {
+  const { data } = await api.put(`/movies/${movieId}`, { status });
+  return normalizeMovie(data);
+};
 
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+export const updateMovieRating = async (movieId, rating) => {
+  const { data } = await api.put(`/movies/${movieId}`, { rating });
+  return normalizeMovie(data);
 };

@@ -10,7 +10,17 @@ const getMovies = async (req, res) => {
 };
 
 const addMovie = async (req, res) => {
-  const { title, genre, rating, watched } = req.body;
+  const {
+    title,
+    genre,
+    rating,
+    watched,
+    status,
+    review,
+    poster,
+    year,
+    imdbID,
+  } = req.body;
 
   if (!title) {
     return res.status(400).json({ message: 'Title is required' });
@@ -21,11 +31,53 @@ const addMovie = async (req, res) => {
       title,
       genre,
       rating,
-      watched,
+      watched: watched ?? status === 'Watched',
+      status: status || 'Plan to Watch',
+      review: review || '',
+      poster: poster || 'N/A',
+      year: year || '',
+      imdbID: imdbID || '',
       user: req.user._id,
     });
 
     res.status(201).json(movie);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+const updateMovie = async (req, res) => {
+  try {
+    const updateFields = {};
+
+    if (typeof req.body.status === 'string' && req.body.status.trim()) {
+      updateFields.status = req.body.status;
+      updateFields.watched = req.body.status === 'Watched';
+    }
+
+    if (typeof req.body.rating === 'number') {
+      updateFields.rating = req.body.rating;
+    }
+
+    if (typeof req.body.review === 'string') {
+      updateFields.review = req.body.review;
+    }
+
+    if (typeof req.body.watched === 'boolean') {
+      updateFields.watched = req.body.watched;
+    }
+
+    const movie = await Movie.findOneAndUpdate(
+      { _id: req.params.id, user: req.user._id },
+      { $set: updateFields },
+      { new: true, runValidators: true }
+    );
+
+    if (!movie) {
+      return res.status(404).json({ message: 'Movie not found' });
+    }
+
+    res.json(movie);
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }
@@ -50,4 +102,4 @@ const deleteMovie = async (req, res) => {
   }
 };
 
-module.exports = { getMovies, addMovie, deleteMovie };
+module.exports = { getMovies, addMovie, updateMovie, deleteMovie };

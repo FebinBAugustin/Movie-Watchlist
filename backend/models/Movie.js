@@ -18,6 +18,26 @@ const movieSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    status: {
+      type: String,
+      default: 'Plan to Watch',
+    },
+    review: {
+      type: String,
+      default: '',
+    },
+    poster: {
+      type: String,
+      default: 'N/A',
+    },
+    year: {
+      type: String,
+      default: '',
+    },
+    imdbID: {
+      type: String,
+      default: '',
+    },
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
