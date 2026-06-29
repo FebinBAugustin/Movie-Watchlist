@@ -2,7 +2,10 @@ const Movie = require('../models/Movie');
 
 const getMovies = async (req, res) => {
   try {
-    const movies = await Movie.find({ user: req.user._id }).sort({ createdAt: -1 });
+    const movies = await Movie.find({
+      user: req.user._id,
+    }).sort({ createdAt: -1 });
+
     res.json(movies);
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
@@ -20,10 +23,13 @@ const addMovie = async (req, res) => {
     poster,
     year,
     imdbID,
+    trailer,
   } = req.body;
 
   if (!title) {
-    return res.status(400).json({ message: 'Title is required' });
+    return res.status(400).json({
+      message: 'Title is required',
+    });
   }
 
   try {
@@ -37,12 +43,15 @@ const addMovie = async (req, res) => {
       poster: poster || 'N/A',
       year: year || '',
       imdbID: imdbID || '',
+      trailer: trailer || '',
       user: req.user._id,
     });
 
     res.status(201).json(movie);
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({
+      message: 'Server error',
+    });
   }
 };
 
@@ -50,9 +59,13 @@ const updateMovie = async (req, res) => {
   try {
     const updateFields = {};
 
-    if (typeof req.body.status === 'string' && req.body.status.trim()) {
+    if (
+      typeof req.body.status === 'string' &&
+      req.body.status.trim()
+    ) {
       updateFields.status = req.body.status;
-      updateFields.watched = req.body.status === 'Watched';
+      updateFields.watched =
+        req.body.status === 'Watched';
     }
 
     if (typeof req.body.rating === 'number') {
@@ -67,19 +80,35 @@ const updateMovie = async (req, res) => {
       updateFields.watched = req.body.watched;
     }
 
+    if (typeof req.body.trailer === 'string') {
+      updateFields.trailer = req.body.trailer;
+    }
+
     const movie = await Movie.findOneAndUpdate(
-      { _id: req.params.id, user: req.user._id },
-      { $set: updateFields },
-      { new: true, runValidators: true }
+      {
+        _id: req.params.id,
+        user: req.user._id,
+      },
+      {
+        $set: updateFields,
+      },
+      {
+        new: true,
+        runValidators: true,
+      }
     );
 
     if (!movie) {
-      return res.status(404).json({ message: 'Movie not found' });
+      return res.status(404).json({
+        message: 'Movie not found',
+      });
     }
 
     res.json(movie);
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({
+      message: 'Server error',
+    });
   }
 };
 
@@ -88,18 +117,35 @@ const deleteMovie = async (req, res) => {
     const movie = await Movie.findById(req.params.id);
 
     if (!movie) {
-      return res.status(404).json({ message: 'Movie not found' });
+      return res.status(404).json({
+        message: 'Movie not found',
+      });
     }
 
-    if (movie.user.toString() !== req.user._id.toString()) {
-      return res.status(401).json({ message: 'Not authorized' });
+    if (
+      movie.user.toString() !==
+      req.user._id.toString()
+    ) {
+      return res.status(401).json({
+        message: 'Not authorized',
+      });
     }
 
     await movie.deleteOne();
-    res.json({ message: 'Movie removed' });
+
+    res.json({
+      message: 'Movie removed',
+    });
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({
+      message: 'Server error',
+    });
   }
 };
 
-module.exports = { getMovies, addMovie, updateMovie, deleteMovie };
+module.exports = {
+  getMovies,
+  addMovie,
+  updateMovie,
+  deleteMovie,
+};

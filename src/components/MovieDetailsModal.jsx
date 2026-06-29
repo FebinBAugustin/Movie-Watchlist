@@ -86,6 +86,20 @@ export default function MovieDetailsModal({ movie, onClose }) {
               </p>
             </div>
 
+            {/* Trailer Button */}
+            <div className="mt-6">
+              <a
+                href={`https://www.youtube.com/results?search_query=${encodeURIComponent(
+                  `${movie.Title} official trailer`
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block rounded-lg bg-red-600 px-6 py-3 font-semibold text-white transition hover:bg-red-700"
+              >
+                ▶ Watch Trailer
+              </a>
+            </div>
+
           </div>
 
         </div>

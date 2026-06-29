@@ -38,6 +38,10 @@ const movieSchema = new mongoose.Schema(
       type: String,
       default: '',
     },
+    trailer: {
+      type: String,
+      default: '',
+    },
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
