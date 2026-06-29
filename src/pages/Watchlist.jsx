@@ -7,9 +7,13 @@ import {
   updateMovieRating,
 } from "../services/watchlistService";
 
+import { getMovieDetails } from "../services/movieService";
+import MovieDetailsModal from "../components/MovieDetailsModal";
+
 export default function Watchlist() {
   const [watchlist, setWatchlist] = useState([]);
   const [filter, setFilter] = useState("All");
+  const [selectedMovie, setSelectedMovie] = useState(null);
 
   useEffect(() => {
     loadWatchlist();
@@ -39,6 +43,16 @@ export default function Watchlist() {
     toast.success("Rating updated!");
   };
 
+  const handleViewDetails = async (imdbID) => {
+    const movie = await getMovieDetails(imdbID);
+
+    if (movie) {
+      setSelectedMovie(movie);
+    } else {
+      toast.error("Unable to load movie details.");
+    }
+  };
+
   const filteredMovies =
     filter === "All"
       ? watchlist
@@ -57,7 +71,6 @@ export default function Watchlist() {
 
   return (
     <div className="mx-auto max-w-7xl px-6 py-10">
-
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="text-4xl font-bold text-white">
@@ -150,9 +163,7 @@ export default function Watchlist() {
                   {[1, 2, 3, 4, 5].map((star) => (
                     <button
                       key={star}
-                      onClick={() =>
-                        handleRating(movie.imdbID, star)
-                      }
+                      onClick={() => handleRating(movie.imdbID, star)}
                       className="text-3xl transition hover:scale-125"
                     >
                       {star <= movie.rating ? "⭐" : "☆"}
@@ -167,10 +178,26 @@ export default function Watchlist() {
                 >
                   🗑 Remove
                 </button>
+
+                {/* View Details */}
+                <button
+                  onClick={() => handleViewDetails(movie.imdbID)}
+                  className="mt-3 w-full rounded-lg bg-indigo-600 py-2 font-semibold text-white hover:bg-indigo-700"
+                >
+                  🎥 View Details
+                </button>
               </div>
             </div>
           ))}
         </div>
+      )}
+
+      {/* Movie Details Popup */}
+      {selectedMovie && (
+        <MovieDetailsModal
+          movie={selectedMovie}
+          onClose={() => setSelectedMovie(null)}
+        />
       )}
     </div>
   );

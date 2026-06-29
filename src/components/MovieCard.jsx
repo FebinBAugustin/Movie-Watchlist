@@ -4,9 +4,10 @@ export default function MovieCard({
   year,
   poster,
   onAddToWatchlist,
+  onViewDetails,
 }) {
   return (
-    <div className="rounded-xl border border-line bg-stub overflow-hidden shadow-lg">
+    <div className="overflow-hidden rounded-xl border border-line bg-stub shadow-lg">
       <img
         src={
           poster !== "N/A"
@@ -31,9 +32,16 @@ export default function MovieCard({
               poster,
             })
           }
-          className="mt-4 w-full rounded-lg bg-flame py-2 text-white font-semibold hover:opacity-90"
+          className="mt-4 w-full rounded-lg bg-flame py-2 font-semibold text-white hover:opacity-90"
         >
           Add to Watchlist
+        </button>
+
+        <button
+          onClick={() => onViewDetails(imdbID)}
+          className="mt-3 w-full rounded-lg bg-blue-600 py-2 font-semibold text-white hover:bg-blue-700"
+        >
+          View Details
         </button>
       </div>
     </div>

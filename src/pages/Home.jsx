@@ -1,14 +1,24 @@
 import { useState } from "react";
 import { Sparkles, Search } from "lucide-react";
 import toast from "react-hot-toast";
+
 import MovieCard from "../components/MovieCard";
-import { searchMovies } from "../services/movieService";
+import MovieDetailsModal from "../components/MovieDetailsModal";
+
+import {
+  searchMovies,
+  getMovieDetails,
+} from "../services/movieService";
+
 import { addToWatchlist } from "../services/watchlistService";
 
 export default function Home() {
   const [query, setQuery] = useState("");
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  // Movie selected for popup
+  const [selectedMovie, setSelectedMovie] = useState(null);
 
   const handleSearch = async () => {
     if (!query.trim()) {
@@ -36,25 +46,35 @@ export default function Home() {
   const handleAddToWatchlist = (movie) => {
     addToWatchlist(movie);
 
-    toast.success(`🎬 "${movie.title}" added to your Watchlist!`, {
+    toast.success(`🎬 "${movie.title}" added to Watchlist!`, {
       duration: 2500,
       style: {
         borderRadius: "12px",
         background: "#1E1E24",
         color: "#fff",
         border: "1px solid #ff6b35",
-        fontWeight: "600",
-      },
-      iconTheme: {
-        primary: "#ff6b35",
-        secondary: "#fff",
       },
     });
   };
 
+  const handleViewDetails = async (imdbID) => {
+    try {
+      const movie = await getMovieDetails(imdbID);
+
+      if (movie) {
+        setSelectedMovie(movie);
+      } else {
+        toast.error("Movie details not found.");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to load movie details.");
+    }
+  };
+
   return (
     <div>
-      {/* Hero */}
+      {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-br from-[#2A0A12] via-[#1A0A0B] to-paper px-5 py-20">
         <div className="mx-auto max-w-6xl">
           <span className="mb-5 inline-flex items-center gap-2 rounded-full bg-stub/80 px-4 py-1.5 text-sm text-ink2">
@@ -70,8 +90,7 @@ export default function Home() {
 
           <p className="mt-5 max-w-xl text-base text-ink2">
             Search thousands of films, build your personal watchlist, and rate
-            every movie you've experienced — all in one beautifully simple
-            place.
+            every movie you've experienced.
           </p>
 
           <form
@@ -85,15 +104,15 @@ export default function Home() {
 
             <input
               type="text"
+              placeholder="Search for Interstellar, Leo, Dune..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search for Interstellar, Leo, Dune..."
-              className="focus-ring flex-1 bg-transparent py-2 text-sm text-ink placeholder:text-ink2/70 outline-none"
+              className="flex-1 bg-transparent py-2 text-sm text-ink placeholder:text-ink2/70 outline-none"
             />
 
             <button
               type="submit"
-              className="bg-flame focus-ring rounded-full px-5 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+              className="rounded-full bg-flame px-5 py-2.5 text-sm font-semibold text-white hover:opacity-90"
             >
               Search
             </button>
@@ -131,11 +150,20 @@ export default function Home() {
                 year={movie.Year}
                 poster={movie.Poster}
                 onAddToWatchlist={handleAddToWatchlist}
+                onViewDetails={handleViewDetails}
               />
             ))}
           </div>
         )}
       </section>
+
+      {/* Movie Details Popup */}
+      {selectedMovie && (
+        <MovieDetailsModal
+          movie={selectedMovie}
+          onClose={() => setSelectedMovie(null)}
+        />
+      )}
     </div>
   );
 }
