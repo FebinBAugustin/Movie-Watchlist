@@ -41,3 +41,24 @@ export const getMovieDetails = async (imdbID) => {
     return null;
   }
 };
+
+// Fetch details of trending movies
+export const getTrendingMovies = async () => {
+  const trendingIDs = [
+    "tt15239678", // Dune: Part Two
+    "tt15398776", // Oppenheimer
+    "tt0816692",  // Interstellar
+    "tt9362722",  // Spider-Man: Across the Spider-Verse
+    "tt6710474",  // Everything Everywhere All at Once
+    "tt0468569",  // The Dark Knight
+  ];
+
+  try {
+    const promises = trendingIDs.map(id => getMovieDetails(id));
+    const results = await Promise.all(promises);
+    return results.filter(movie => movie !== null);
+  } catch (error) {
+    console.error("Error fetching trending movies:", error);
+    return [];
+  }
+};

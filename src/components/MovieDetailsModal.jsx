@@ -41,7 +41,7 @@ export default function MovieDetailsModal({ movie, onClose }) {
               {movie.Genre?.split(", ").map((genre) => (
                 <span
                   key={genre}
-                  className="rounded-full bg-orange-500 px-3 py-1 text-sm font-semibold text-white"
+                  className="rounded-full bg-brass/20 text-violet-200 border border-brass/30 px-3 py-1 text-sm font-semibold"
                 >
                   {genre}
                 </span>

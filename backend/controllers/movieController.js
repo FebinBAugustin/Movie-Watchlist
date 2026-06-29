@@ -143,9 +143,30 @@ const deleteMovie = async (req, res) => {
   }
 };
 
+const getMovieStats = async (req, res) => {
+  try {
+    const movies = await Movie.find({ user: req.user._id });
+    const watchedMovies = movies.filter(m => m.status === 'Watched' || m.watched);
+    const ratedMovies = movies.filter(m => m.rating > 0);
+
+    const moviesWatchedCount = watchedMovies.length;
+    const avgRating = ratedMovies.length > 0
+      ? (ratedMovies.reduce((sum, m) => sum + m.rating, 0) / ratedMovies.length).toFixed(1)
+      : 0;
+
+    res.json({
+      moviesWatched: moviesWatchedCount,
+      averageRating: Number(avgRating),
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
 module.exports = {
   getMovies,
   addMovie,
   updateMovie,
   deleteMovie,
+  getMovieStats,
 };

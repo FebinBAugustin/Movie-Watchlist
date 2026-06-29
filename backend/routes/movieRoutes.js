@@ -1,10 +1,11 @@
 const express = require('express');
-const { getMovies, addMovie, updateMovie, deleteMovie } = require('../controllers/movieController');
+const { getMovies, addMovie, updateMovie, deleteMovie, getMovieStats } = require('../controllers/movieController');
 const { protect } = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
 router.get('/', protect, getMovies);
+router.get('/stats', protect, getMovieStats);
 router.post('/', protect, addMovie);
 router.put('/:id', protect, updateMovie);
 router.delete('/:id', protect, deleteMovie);

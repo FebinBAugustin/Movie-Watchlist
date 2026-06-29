@@ -61,3 +61,8 @@ export const updateMovieRating = async (movieId, rating) => {
   const { data } = await api.put(`/movies/${movieId}`, { rating });
   return normalizeMovie(data);
 };
+
+export const getWatchlistStats = async () => {
+  const { data } = await api.get("/movies/stats");
+  return data;
+};

@@ -4,13 +4,19 @@
 
 @theme {
   --font-display: "InterVariable", "Inter", system-ui, sans-serif;
-  --color-paper: #0A0A0B;       /* near-black backdrop */
+  --color-paper: #090714;       /* deep dark purple/grape backdrop */
   --color-ink: #FFFFFF;         /* primary text on dark */
-  --color-ink2: #A1A1AA;        /* muted grey secondary text */
-  --color-stub: #16161A;        /* card / panel surface */
-  --color-line: #27272A;        /* hairline dividers / borders */
-  --color-brass: #FF5A36;       /* gradient warm-orange endpoint, used for solid accents */
-  --color-brassDark: #E5402A;   /* hover state for brass */
+  --color-ink2: #A1A1C2;        /* lavender-tinted grey secondary text */
+  --color-stub: #130F26;        /* card / panel surface */
+  --color-line: #251E3D;        /* hairline dividers / borders */
+  --color-brass: #8B5CF6;       /* accent: electric violet */
+  --color-brassDark: #7C3AED;   /* hover state for brass */
+
+  /* Override Tailwind gray colors to match Cinematic Amethyst theme */
+  --color-gray-900: #090714;
+  --color-gray-800: #130F26;
+  --color-gray-700: #251E3D;
+  --color-gray-950: #05040B;
 }
 
 html {
@@ -22,24 +28,23 @@ body {
   color: var(--color-ink);
 }
 
-/* The signature gradient text/accent: used sparingly, once per section,
-   so it stays a deliberate highlight rather than decoration. */
+/* The signature gradient text/accent: Cinematic Amethyst (electric violet to pink/rose gold) */
 .text-flame {
-  background-image: linear-gradient(90deg, #FF3D5A 0%, #FF7A30 100%);
+  background-image: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
 .bg-flame {
-  background-image: linear-gradient(90deg, #FF3D5A 0%, #FF7A30 100%);
+  background-image: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
 }
 
 .focus-ring {
   outline: none;
 }
 .focus-ring:focus-visible {
-  box-shadow: 0 0 0 2px #FF5A36, 0 0 0 4px var(--color-paper);
+  box-shadow: 0 0 0 2px #8B5CF6, 0 0 0 4px var(--color-paper);
 }
 
 @media (prefers-reduced-motion: reduce) {

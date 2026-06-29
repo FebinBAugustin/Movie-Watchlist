@@ -40,4 +40,9 @@ export function isAuthenticated() {
   return Boolean(localStorage.getItem("token"));
 }
 
+export async function getUserProfile() {
+  const { data } = await api.get("/profile");
+  return data;
+}
+
 export default api;
