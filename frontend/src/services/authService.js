@@ -3,7 +3,9 @@ import axios from "axios";
 // Member 3 will expose these on the Express server.
 // Set VITE_API_URL in a .env file once the backend is running, e.g.:
 // VITE_API_URL=http://localhost:5000/api
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api/auth";
+const API_URL = `${
+  import.meta.env.VITE_API_URL || "http://localhost:5000/api"
+}/auth`;
 
 const api = axios.create({
   baseURL: API_URL,
