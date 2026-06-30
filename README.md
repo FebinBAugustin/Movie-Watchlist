@@ -1,130 +1,121 @@
-# Movie Watchlist — Client (Member 1 scope)
+# Reel List — Movie Watchlist Application
 
-Frontend UI for the Movie Watchlist App: Login, Register, Navbar, Home page shell,
-and responsive layout. Built with React + Vite + Tailwind + React Router.
+Reel List is a premium, full-stack Movie Watchlist application designed to help movie lovers search, discover, track, and review their favorite films. Built with a modern responsive UI and a robust Express + MongoDB backend, this application provides an immersive workspace to manage your film collection.
 
-## What's in here
+---
 
-```
-client/
-├── src/
-│   ├── components/
-│   │   ├── Navbar.jsx          # responsive nav with login/logout state
-│   │   ├── FormField.jsx       # shared input used by Login/Register
-│   │   └── ProtectedRoute.jsx  # redirects to /login if not authenticated
-│   ├── pages/
-│   │   ├── Home.jsx            # hero + placeholder slot for Member 2
-│   │   ├── Login.jsx
-│   │   ├── Register.jsx
-│   │   ├── Watchlist.jsx       # placeholder for Member 2
-│   │   └── Profile.jsx         # placeholder stats for Member 4
-│   ├── services/
-│   │   └── authService.js      # axios calls to /register and /login
-│   ├── App.jsx                 # routes
-│   ├── main.jsx                # entry point
-│   └── index.css
-├── tailwind.config.js
-├── vite.config.js
-└── package.json
-```
+## 🌟 Key Features
 
-## Run it locally
+### 🎬 Frontend & UX
+- **Dynamic Search & Discovery**: Find any movie instantly powered by the OMDb API. Includes hydrated detail details (genres, year, directors, cast, rating).
+- **Trending Highlights**: Discover featured trending titles right on the homepage upon landing.
+- **Advanced Filtering & Sorting**: Group your search results or watchlist by Genre, Country, Year, and sort them dynamically.
+- **Glassmorphic Design System**: Modern dark & light mode configurations supported via a reactive theme toggler (`ThemeContext`).
+- **Interactive Modals**: Seamlessly view movie plots, key crew, trailer links, and add personal rating/review edits in a clean, overlay card interface.
+- **Personal Watchlist**: Custom workspace where users can track movies, select status (`Plan to Watch`, `Watching`, `Watched`, `Dropped`), rate on a 10-star scale, and compose personal reviews.
+- **User Dashboard & Analytics**: Visualize stats (total movies watched, average watchlist rating) directly in the personalized User Profile section.
+- **JWT-Guarded Routes**: Secure route protection with custom React Router wrapper (`ProtectedRoute`).
 
-You need Node.js installed (v18+ recommended).
+### ⚙️ Backend API
+- **Express & Node.js API Service**: Fast, modular routing structure utilizing Mongoose schemas.
+- **MongoDB Data Persistence**: Secure and scalable document storage for users and watchlist movies.
+- **JWT Authentication**: Full user signup and login cycles with encrypted passwords (`bcryptjs`).
+- **Aggregation Stats**: Custom endpoints to compute aggregate statistics for user-specific watchlists.
 
-```bash
-cd client
-npm install
-npm run dev
-```
+---
 
-This starts the dev server, usually at `http://localhost:5173`.
-
-The login/register forms call `http://localhost:5000/api/login` and
-`/register` by default (Member 3's Express server). If the backend isn't
-running yet, the pages still render — submitting will just show an error
-message, which is expected.
-
-To point at a different backend URL, create a `.env` file in `client/`:
+## 📂 Project Structure
 
 ```
-VITE_API_URL=http://localhost:5000/api
+Movie-Watchlist/
+├── backend/                  # Node.js + Express API backend
+│   ├── config/               # Database connection settings
+│   ├── controllers/          # Request handler functions (auth, movie)
+│   ├── middleware/           # JWT verification middlewares
+│   ├── models/               # MongoDB models & schemas (User, Movie)
+│   ├── routes/               # API endpoint routers
+│   ├── utils/                # Utility helpers
+│   ├── server.js             # Main server execution file
+│   └── package.json          # Backend dependencies & scripts
+├── src/                      # React frontend source code
+│   ├── components/           # Reusable UI components (Navbar, MovieCard, Modals)
+│   ├── context/              # Context providers (ThemeContext)
+│   ├── pages/                # App pages (Home, Login, Register, Watchlist, Profile)
+│   ├── services/             # Axios API service callers (auth, movie, watchlist)
+│   ├── App.jsx               # Main React routes configuration
+│   ├── main.jsx              # React entry point file
+│   └── index.css             # Tailwind v4 custom stylesheets & themes
+├── index.html                # Frontend entry HTML shell
+├── package.json              # Frontend package manager configuration
+├── vite.config.js            # Vite bundle configuration
+└── README.md                 # Project overall documentation
 ```
 
-## How to get this into your team's repo (step by step)
+---
 
-Use this if your team already created a GitHub repo for the project (e.g. named
-`movie-watchlist`) and you need to add this client code to it.
+## 🚀 Getting Started
 
-### Option A — repo already exists on GitHub, you're cloning fresh
+### Prerequisites
+Make sure you have [Node.js](https://nodejs.org/) (v18+ recommended) and [MongoDB](https://www.mongodb.com/) installed and running on your local machine.
 
-1. Open VS Code → Terminal → New Terminal.
-2. Clone the repo:
+---
+
+### 1. Backend Setup & Run
+
+1. Navigate to the `backend/` directory:
    ```bash
-   git clone https://github.com/YOUR-TEAM/movie-watchlist.git
-   cd movie-watchlist
+   cd backend
    ```
-3. Copy everything from this `client/` folder into the repo's `client/` folder
-   (create the folder if it doesn't exist yet).
-4. Stage and commit:
+
+2. Install backend dependencies:
    ```bash
-   git add client/
-   git commit -m "Add client: navbar, login/register pages, home shell"
-   git push origin main
+   npm install
    ```
-   If your team uses branches per member instead of pushing straight to `main`:
+
+3. Create a `.env` configuration file inside the `backend/` directory:
+   ```env
+   PORT=5000
+   MONGO_URI=mongodb://localhost:27017/movie-watchlist
+   JWT_SECRET=your_jwt_super_secret_key
+   ```
+   > [!NOTE]
+   > Replace the `MONGO_URI` and `JWT_SECRET` variables with your actual local database URI and secret key signature.
+
+4. Start the backend development server (runs on `http://localhost:5000` by default):
    ```bash
-   git checkout -b member1-frontend
-   git add client/
-   git commit -m "Add client: navbar, login/register pages, home shell"
-   git push origin member1-frontend
+   npm run dev
    ```
-   Then open a Pull Request on GitHub into `main` so your teammates can review.
 
-### Option B — you're starting the repo from scratch
+---
 
-1. Open VS Code, then File → Open Folder → select an empty folder where you
-   want the project.
-2. Copy this entire `client/` folder into it (so you have `your-project/client/`).
-3. In the VS Code terminal:
+### 2. Frontend Setup & Run
+
+1. Navigate to the project root directory:
    ```bash
-   git init
-   git add .
-   git commit -m "Initial commit: client setup with auth pages and navbar"
+   cd ..
    ```
-4. Create an empty repo on GitHub (no README, no .gitignore — you already have one)
-   named `movie-watchlist`, then:
+
+2. Install frontend dependencies:
    ```bash
-   git remote add origin https://github.com/YOUR-TEAM/movie-watchlist.git
-   git branch -M main
-   git push -u origin main
+   npm install
    ```
-5. Share the repo link with your 3 teammates and add them as collaborators
-   (GitHub repo → Settings → Collaborators → Add people).
 
-### Day-to-day workflow after that
+3. Create a `.env` configuration file in the project root directory:
+   ```env
+   VITE_API_URL=http://localhost:5000/api
+   ```
+   *This connects your frontend application with the backend API endpoints.*
 
-- Always `git pull` before you start working, so you have your teammates' latest changes.
-- Work in a branch per feature if your team agreed to that:
-  ```bash
-  git checkout -b fix-navbar-spacing
-  # make changes
-  git add .
-  git commit -m "Fix navbar spacing on mobile"
-  git push origin fix-navbar-spacing
-  ```
-  then open a Pull Request on GitHub.
-- If you're all just pushing to `main` directly (fine for a 3-day mini project),
-  just remember to `git pull` first each time to avoid conflicts.
+4. Launch the frontend development server:
+   ```bash
+   npm run dev
+   ```
+   *The client application should open in your browser, typically at `http://localhost:5173`.*
 
-## Notes for the rest of the team
+---
 
-- **Member 2**: the placeholder boxes in `Home.jsx` and `Watchlist.jsx` mark
-  exactly where your search bar, movie cards, and watchlist table should go.
-  Keep using the existing color tokens (`bg-stub`, `text-ink`, `text-brass`, etc.)
-  defined in `tailwind.config.js` so the new UI matches.
-- **Member 3**: the frontend expects `POST /api/register` and `POST /api/login`
-  to return `{ token, user }` on success. Adjust `authService.js` if your
-  response shape differs.
-- **Member 4**: `Profile.jsx` has two placeholder stats (movies watched,
-  average rating) ready for you to wire up once the watchlist stats endpoint exists.
+## 🛠️ Technology Stack
+
+- **Frontend**: React (v18), Vite, React Router DOM (v6), Tailwind CSS (v4), Axios, Lucide React, React Hot Toast.
+- **Backend**: Node.js, Express, MongoDB, Mongoose, JSON Web Tokens (JWT), BcryptJS, Nodemon.
+- **API Data Provider**: OMDb API.
